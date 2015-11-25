@@ -1,0 +1,10 @@
+excerpt_separator: ""
+pygments: true
+markdown: kramdown
+url: http://kennonoutlaw.github.io
+title: Kennon Outlaw
+email: kennon.outlaw@gmail.com
+author: Kennon Outlaw
+description: My personal portfolio and blog
+paginate: 5
+google_analytics: 
