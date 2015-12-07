@@ -14,12 +14,12 @@ This was the first application that I built from scratch. As part of the Bloc cu
 
 We were giving these requirements for the BlocNotes application and it was up to us to implement them:
 
-Notes can be created, edited, and deleted.
-The title of the note can be set.
-The note content can be shared from other applications into BlocNotes.
-The notes can be searched.
-Data such as email addresses, URLs, and phone numbers are tappable links.
-Notes live in the cloud and are accessible from all iOS devices.
+1. Notes can be created, edited, and deleted.
+2. The title of the note can be set.
+3. The note content can be shared from other applications into BlocNotes.
+4. The notes can be searched.
+5. Data such as email addresses, URLs, and phone numbers are tappable links.
+6. Notes live in the cloud and are accessible from all iOS devices.
 
 ###Solution
 
