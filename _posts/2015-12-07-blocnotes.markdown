@@ -121,7 +121,6 @@ I registered for iCloud notifications:
 }
 {% endhighlight %}
 Here’s the code to handle the notifications:
-//Note: this is called when data in the cloud changes
 {% highlight objective-c %}
 - (void) persistentStoreDidImportUbiquitousContentChanges:(NSNotification *)changeNotification {
     
@@ -176,4 +175,4 @@ All of the solutions passed all of my tests and worked just fine. I approach to 
 
 I’m very glad that I started with this project. I gained a lot of knowledge during the building of this app and it gave me a solid foundation to build on as I proceed further into iOS application development. The BlocNotes app may seem simple from a UI perspective but underneath the covers there are many things being done which have been detailed in this case study. The most difficult requirement for me was to make the links tappable. This presented many challenges and it was very satisfying to overcome those challenges.
 
-[https://github.com/kennonoutlaw/bloc-notes]
+[https://github.com/kennonoutlaw/bloc-notes](https://github.com/kennonoutlaw/bloc-notes)
