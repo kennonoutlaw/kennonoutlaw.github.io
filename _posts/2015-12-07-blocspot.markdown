@@ -47,15 +47,7 @@ To start I created a new View Controller and added a MKMapView to it. This gave 
         for (MKMapItem *item in response.mapItems) {
             
             [_searchResults addObject:item];
-            
-            //NSArray *lines = item.placemark.addressDictionary[ @"FormattedAddressLines"];
-            //NSString *addressString = [lines componentsJoinedByString:@"\n"];
-            //[placemarks addObject:[[SpotAnnotation alloc] initWithTitle:item.placemark.name subTitle:addressString
-           //                                                  coordinate:item.placemark.location.coordinate]];
         }
-        
-        //[self.mapView removeAnnotations:[self.mapView annotations]];
-        //[self.mapView showAnnotations:placemarks animated:YES];
         
         [self.searchDisplayController.searchResultsTableView reloadData];
     }];
