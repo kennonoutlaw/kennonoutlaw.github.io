@@ -3,8 +3,6 @@ published: true
 title: BlocNotes
 layout: post
 ---
-##BlocNotes
-    
 ###Summary
  BlocNotes is a note-taking app. It allows notes to be stored and deleted. BlocNotes stores the notes using Core Data. The notes can be shared with other applications and also integrates with iCloud.
 
@@ -29,7 +27,7 @@ Notes can be created, edited, and deleted.
       I resolved by building master and detail view controllers. The master view controller lists all of the existing notes and the detail view controllers displays an individual note. The master view controller also provides the functionality to search the existing notes and allows the user to click a button to add a new note or click on a Table View row to edit a selected note. The detail view controller has an UITextView to display the note body and an UIBarButtonItem to save the note. 
 
 I added a class CoreDataStack that is responsible for saving the note to Core Data. It has a static method called defaultStack which uses the Singleton design pattern to return an instance of CoreDataStack. This class abstracts the details of saving to Core Data and makes it easy to do a save without worrying about the details of the Core Data storage.
-
+{% highlight objective-c %}
 + (instancetype)defaultStack {
     static CoreDataStack *defaultStack;
     static dispatch_once_t onceToken;
@@ -39,13 +37,13 @@ I added a class CoreDataStack that is responsible for saving the note to Core Da
     
     return defaultStack;
 }
-
+{% endhighlight %}
 The title of the note can be set.
 I added an UITextField object to allow this field to be set.
  
 The note content can be shared from other applications into BlocNotes.
 This was accomplished by using the UIActivityViewController class which provides automated sharing. It accepts an array of items to share. The code to build this array and share them is here:
-
+{% highlight objective-c %}
 - (IBAction)shareNote:(id)sender {
     
     NSMutableArray *itemsToShare = [NSMutableArray array];
@@ -62,9 +60,10 @@ This was accomplished by using the UIActivityViewController class which provides
         [self presentViewController:activityVC animated:YES completion:nil];
     }
 }
-
+{% endhighlight %}
 The notes can be searched.
 I used the UISearchDisplayController class to allow the notes to be searched. The code to search the notes is here:
+{% highlight objective-c %}
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
     [self searchForText:searchString];
@@ -93,7 +92,7 @@ I used the UISearchDisplayController class to allow the notes to be searched. Th
         }
     }
 }
-
+{% endhighlight %}
 Data such as email addresses, URLs, and phone numbers are tappable links.
 I set the dataDetectorTypes property of the UITextView to UIDataDetectorTypeAll then I have a method that uses NSDataDetector to make the specified data types tappable.
 
@@ -101,6 +100,7 @@ Notes live in the cloud and are accessible from all iOS devices.
 I modified the singleton class CoreDataStack to accomplish this. This allowed the other parts of the code to remain untouched and makes testing much easier.
 
 I registered for iCloud notifications:
+{% highlight objective-c %}
 - (void)registerForiCloudNotifications:(NSPersistentStoreCoordinator *)psc {
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     
@@ -119,9 +119,10 @@ I registered for iCloud notifications:
                                name:NSPersistentStoreDidImportUbiquitousContentChangesNotification
                              object:psc];
 }
-
+{% endhighlight %}
 Here’s the code to handle the notifications:
 //Note: this is called when data in the cloud changes
+{% highlight objective-c %}
 - (void) persistentStoreDidImportUbiquitousContentChanges:(NSNotification *)changeNotification {
     
     NSLog(@"__PRETTY_FUNCTION__: %s", __PRETTY_FUNCTION__);
@@ -152,10 +153,6 @@ Here’s the code to handle the notifications:
         
         [context reset];
     }];
-    
-    /* Note: Commenting this out because although the best practice seems to be to trigger UI updates here, all of my tests work fine
-             without this code here. Another reason is that the storesDidChange will be called after the store changed and in this method
-             the UI will be changed
      
     // Post notification to trigger UI updates
     [[NSNotificationCenter defaultCenter] postNotificationName:@"NotesUINotification" object:self.managedObjectContext];
@@ -167,7 +164,8 @@ Here’s the code to handle the notifications:
     
     // Post notification to trigger UI updates
     [[NSNotificationCenter defaultCenter] postNotificationName:@"NotesUINotification" object:self.managedObjectContext];
-}a
+}
+{% endhighlight %}
 
 ###Results
 
@@ -178,4 +176,4 @@ All of the solutions passed all of my tests and worked just fine. I approach to 
 
 I’m very glad that I started with this project. I gained a lot of knowledge during the building of this app and it gave me a solid foundation to build on as I proceed further into iOS application development. The BlocNotes app may seem simple from a UI perspective but underneath the covers there are many things being done which have been detailed in this case study. The most difficult requirement for me was to make the links tappable. This presented many challenges and it was very satisfying to overcome those challenges.
 
-https://github.com/kennonoutlaw/bloc-notes
+[https://github.com/kennonoutlaw/bloc-notes]
