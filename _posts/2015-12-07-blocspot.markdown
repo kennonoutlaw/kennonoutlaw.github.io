@@ -1,0 +1,139 @@
+---
+published: true
+title: BlocSpot
+layout: post
+---
+###Summary
+
+ BlocSpot is an application that uses Apple Maps to discover new places and save your favorite places. It allows the user to save notes about your favorite places and categorize them. The user is notified once they come with a specified radius of one of their saved places.
+
+###Explanation
+
+This was the second application that I built from scratch. I learned a lot when I build my first application BlocNotes and I was eager to take the next step in iOS app development. I learned many new things in the building of BlocSpot including Location and Maps Programming, Local and Push Notifications, and natural language search.
+
+###Problem
+
+We were giving these requirements for the BlocSpot application and it was up to me to implement them correctly:
+
++ Apple Maps should be queried for points of interest.
++ Give the user the ability to create categories with a name and color.
++ Allow the user to assign a point of interest to a category.
++ Make the map filterable by category.
++ Add notes to a point of interest and navigate to it.
++ Notify the user when a point of interest is approached.
+
+###Solution
+
++ Apple Maps should be queried for points of interest.
+To start I created a new View Controller and added a MKMapView to it. This gave me what I needed to display a map to the user. I then added a UISearchBar to the View Controller and added this method to do the search:
+{% highlight objective-c %}
+- (void)loadPointsOfInterest:(NSString *)searchText
+{
+    // Create and initialize a search request object.
+    MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
+    request.naturalLanguageQuery = searchText;
+    request.region = self.mapView.region;
+    
+    // Create and initialize a search object.
+    [_localSearch cancel];
+    _localSearch = [[MKLocalSearch alloc] initWithRequest:request];
+    
+    // Start the search and display the results as annotations on the map.
+    [_localSearch startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error)
+    {
+        _searchResults = [[NSMutableArray alloc] init];
+        
+        //NSMutableArray *placemarks = [NSMutableArray array];
+        for (MKMapItem *item in response.mapItems) {
+            
+            [_searchResults addObject:item];
+            
+            //NSArray *lines = item.placemark.addressDictionary[ @"FormattedAddressLines"];
+            //NSString *addressString = [lines componentsJoinedByString:@"\n"];
+            //[placemarks addObject:[[SpotAnnotation alloc] initWithTitle:item.placemark.name subTitle:addressString
+           //                                                  coordinate:item.placemark.location.coordinate]];
+        }
+        
+        //[self.mapView removeAnnotations:[self.mapView annotations]];
+        //[self.mapView showAnnotations:placemarks animated:YES];
+        
+        [self.searchDisplayController.searchResultsTableView reloadData];
+    }];
+}
+{% endhighlight %}
++ Give the user the ability to create categories with a name and color.
+On the View Controller that the user can edit a category, I added a plus icon that when clicked prompts the user to enter a new category name. When the save button is clicked then a random color is generated and the category name and color are saved to Core Data.
+
++ Allow the user to assign a point of interest to a category.
+When a point of interest is edited, the user has the option to select a category using the category UIPickerView. Each category is color coded in the UIPickerView using the color associated with the category.
+
++ Make the map filterable by category.
+I added a new View Controller that allows the user to select a category to filter the point of interests shown on the map. When a category is selected this method is called:
+{% highlight objective-c %}
+- (void) loadSavedPointsOfInterest:(Categories *)category {
+    NSArray *savedSpots = (category && ![category.categoryName  isEqual: @"All"]) ? [FavoriteSpots getAllSavedSpots:category] : [FavoriteSpots getAllSavedSpots];
+    
+    NSMutableArray *savedAnnotations = [NSMutableArray array];
+    for (FavoriteSpots *savedSpot in savedSpots) {
+        //NSLog(@"%@", savedSpot.name);
+        
+        CLLocation *location = [[CLLocation alloc] initWithLatitude:[savedSpot.latitude floatValue] longitude:[savedSpot.longitude floatValue]];
+        SpotAnnotation *savedAnnotation = [[SpotAnnotation alloc] initWithTitle:savedSpot.name subTitle:savedSpot.address
+                                   coordinate:location.coordinate];
+        
+        NSDictionary *addressDict = @{
+                                      (NSString *) kABPersonAddressStreetKey : savedSpot.address ? savedSpot.address : @"",
+                                      (NSString *) kABPersonAddressCityKey : @"",
+                                      (NSString *) kABPersonAddressStateKey : @"",
+                                      (NSString *) kABPersonAddressZIPKey : @"",
+                                      (NSString *) kABPersonAddressCountryKey : @"",
+                                      (NSString *) kABPersonAddressCountryCodeKey : @""
+                                      };
+        
+        MKPlacemark *placeMark = [[MKPlacemark alloc] initWithCoordinate:location.coordinate addressDictionary:addressDict];
+        MKMapItem *savedMapItem = [[MKMapItem alloc] initWithPlacemark:placeMark];
+        savedMapItem.name = savedSpot.name;
+
+        savedAnnotation.mapItem = savedMapItem;
+        savedAnnotation.favoriteSpot = savedSpot;
+        
+        [savedAnnotations addObject:savedAnnotation];
+        
+        [self setNotification:savedAnnotation];
+    }
+    
+    [self.mapView removeAnnotations:[self.mapView annotations]];
+    [self.mapView showAnnotations:savedAnnotations animated:YES];
+}
+{% endhighlight %}
++ Add notes to a point of interest and navigate to it.    
+I added a notes field to the points of interest that is editable by the user.
+
++ Notify the user when a point of interest is approached.
+In order to accomplish this requirement, I used this method:
+{% highlight objective-c %}
+- (void)setNotification:(SpotAnnotation *)annotation {
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    
+    localNotification.alertBody = [NSString stringWithFormat:@"You are near: %@", annotation.title];
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    
+    localNotification.regionTriggersOnce = NO;
+    localNotification.region = [[CLCircularRegion alloc] initWithCenter:annotation.coordinate radius:200 identifier:annotation.title];
+    
+    UIApplication *application = [UIApplication sharedApplication];
+    [application cancelAllLocalNotifications];
+    [application scheduleLocalNotification:localNotification];
+}
+{% endhighlight %}
+###Results
+
+The completed BlocSpot app turned out great. I was able to install it on my phone and use it. This was very satisfying to actually use my own application. I even was able to show my friends and let them use the app.
+
+My testing methodology for this application was to do testing as I completed each of the requirements and I also tested by using the application on my own phone to make sure each of the requirements was met.
+
+###Conclusion
+
+This was a very useful application both in terms of learning and also allowing me to build something that I can use. I had a fun time building the BlocSpot app and I also found it very challenging for someone just starting out with iOS app development. I accepted the challenge of building this app and I’m glad that I did because it allowed me to grow a lot as an iOS developer. 
+
+[https://github.com/kennonoutlaw/blocspot](https://github.com/kennonoutlaw/blocspot)
