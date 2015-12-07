@@ -14,17 +14,17 @@ This was the first application that I built from scratch. As part of the Bloc cu
 
 We were giving these requirements for the BlocNotes application and it was up to us to implement them:
 
-1. Notes can be created, edited, and deleted.
-2. The title of the note can be set.
-3. The note content can be shared from other applications into BlocNotes.
-4. The notes can be searched.
-5. Data such as email addresses, URLs, and phone numbers are tappable links.
-6. Notes live in the cloud and are accessible from all iOS devices.
++ Notes can be created, edited, and deleted.
++ The title of the note can be set.
++ The note content can be shared from other applications into BlocNotes.
++ The notes can be searched.
++ Data such as email addresses, URLs, and phone numbers are tappable links.
++ Notes live in the cloud and are accessible from all iOS devices.
 
 ###Solution
 
-1. Notes can be created, edited, and deleted.
-   I resolved by building master and detail view controllers. The master view controller lists all of the    existing notes and the detail view controllers displays an individual note. The master view controller also provides the functionality to search the existing notes and allows the user to click a button to add a new note or click on a Table View row to edit a selected note. The detail view controller has an UITextView to display the note body and an UIBarButtonItem to save the note. 
++ Notes can be created, edited, and deleted.
+I resolved by building master and detail view controllers. The master view controller lists all of the    existing notes and the detail view controllers displays an individual note. The master view controller also provides the functionality to search the existing notes and allows the user to click a button to add a new note or click on a Table View row to edit a selected note. The detail view controller has an UITextView to display the note body and an UIBarButtonItem to save the note. 
 
    I added a class CoreDataStack that is responsible for saving the note to Core Data. It has a static method called defaultStack which uses the Singleton design pattern to return an instance of CoreDataStack. This class abstracts the details of saving to Core Data and makes it easy to do a save without worrying about the details of the Core Data storage.
 {% highlight objective-c %}
@@ -38,10 +38,10 @@ We were giving these requirements for the BlocNotes application and it was up to
     return defaultStack;
 }
 {% endhighlight %}
-2. The title of the note can be set.
++ The title of the note can be set.
 I added an UITextField object to allow this field to be set.
  
-3. The note content can be shared from other applications into BlocNotes. 
++ The note content can be shared from other applications into BlocNotes. 
 This was accomplished by using the UIActivityViewController class which provides automated sharing. It accepts an array of items to share. The code to build this array and share them is here:
 {% highlight objective-c %}
 - (IBAction)shareNote:(id)sender {
@@ -61,7 +61,7 @@ This was accomplished by using the UIActivityViewController class which provides
     }
 }
 {% endhighlight %}
-4. The notes can be searched.
++ The notes can be searched.
 I used the UISearchDisplayController class to allow the notes to be searched. The code to search the notes is here:
 {% highlight objective-c %}
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
@@ -93,10 +93,10 @@ I used the UISearchDisplayController class to allow the notes to be searched. Th
     }
 }
 {% endhighlight %}
-5. Data such as email addresses, URLs, and phone numbers are tappable links.
++ Data such as email addresses, URLs, and phone numbers are tappable links.
 I set the dataDetectorTypes property of the UITextView to UIDataDetectorTypeAll then I have a method that uses NSDataDetector to make the specified data types tappable.
 
-6. Notes live in the cloud and are accessible from all iOS devices.
++ Notes live in the cloud and are accessible from all iOS devices.
 I modified the singleton class CoreDataStack to accomplish this. This allowed the other parts of the code to remain untouched and makes testing much easier.
 
 I registered for iCloud notifications:
