@@ -41,8 +41,8 @@ We were giving these requirements for the BlocNotes application and it was up to
 2. The title of the note can be set.
 I added an UITextField object to allow this field to be set.
  
-3. The note content can be shared from other applications into BlocNotes.
-   This was accomplished by using the UIActivityViewController class which provides automated sharing. It accepts an array of items to share. The code to build this array and share them is here:
+3. The note content can be shared from other applications into BlocNotes. 
+This was accomplished by using the UIActivityViewController class which provides automated sharing. It accepts an array of items to share. The code to build this array and share them is here:
 {% highlight objective-c %}
 - (IBAction)shareNote:(id)sender {
     
@@ -62,7 +62,7 @@ I added an UITextField object to allow this field to be set.
 }
 {% endhighlight %}
 4. The notes can be searched.
-   I used the UISearchDisplayController class to allow the notes to be searched. The code to search the notes is here:
+I used the UISearchDisplayController class to allow the notes to be searched. The code to search the notes is here:
 {% highlight objective-c %}
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
@@ -94,10 +94,10 @@ I added an UITextField object to allow this field to be set.
 }
 {% endhighlight %}
 5. Data such as email addresses, URLs, and phone numbers are tappable links.
-   I set the dataDetectorTypes property of the UITextView to UIDataDetectorTypeAll then I have a method that uses NSDataDetector to make the specified data types tappable.
+I set the dataDetectorTypes property of the UITextView to UIDataDetectorTypeAll then I have a method that uses NSDataDetector to make the specified data types tappable.
 
 6. Notes live in the cloud and are accessible from all iOS devices.
-   I modified the singleton class CoreDataStack to accomplish this. This allowed the other parts of the code to remain untouched and makes testing much easier.
+I modified the singleton class CoreDataStack to accomplish this. This allowed the other parts of the code to remain untouched and makes testing much easier.
 
 I registered for iCloud notifications:
 {% highlight objective-c %}
